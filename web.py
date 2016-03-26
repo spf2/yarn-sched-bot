@@ -87,6 +87,7 @@ def handle_submitted(submission):
             day = "today"
         elif delta == 1:
             day = "tomorrow"
+
         if len(best[1]) >= meeting.num_participants:
             # the participants may have changed, so this is kinda a guess...
             names = ['everyone']
@@ -95,11 +96,9 @@ def handle_submitted(submission):
         text = u"the best day is {}. {} {} free".format(
             day, plural.join(names), plural.plural_verb('is', len(names)))
 
-    bot_call = BotCall(
+    send_bot_call(BotCall(
         thread=Thread(thread_id=meeting.thread_id),
-        message=Message(text=text))
-
-    send_bot_call(bot_call)
+        message=Message(text=text)))
 
     meeting.done = True
     db.session.commit()
@@ -122,7 +121,7 @@ def num_users(thread):
 
 
 def poll_users(thread):
-    bot_call = BotCall(
+    send_bot_call(BotCall(
         thread=thread,
         form=Form(
             action="meeting",
@@ -131,9 +130,7 @@ def poll_users(thread):
             items=[FormItem(select=FormSelect(
                 label="what days work for you? choose",
                 multiple=True,
-                options=date_options()))]))
-
-    send_bot_call(bot_call)
+                options=date_options()))])))
 
     db.session.add(Meeting(
         thread_id=thread.thread_id,
