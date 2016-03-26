@@ -126,9 +126,9 @@ def poll_users(thread):
         form=Form(
             action="meeting",
             thread_id=thread.thread_id,
-            label="i'm trying to find a time for {}".format(thread.topic),
+            label=u"i'm trying to find a time for {}".format(thread.topic),
             items=[FormItem(select=FormSelect(
-                label="what days work for you? choose",
+                label=u"what days work for you? choose",
                 multiple=True,
                 options=date_options()))])))
 
