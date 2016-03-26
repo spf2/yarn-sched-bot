@@ -35,7 +35,7 @@ def handle_invocation():
     elif (invocation.delivery.event.type == Event.ADDED and
           invocation.bot.ident in (u.ident for u in invocation.delivery.event.users)):
         reply_text = handle_added(invocation.delivery.thread)
-        
+
     return message_reply(reply_text)
 
 
@@ -87,8 +87,13 @@ def handle_submitted(submission):
             day = "today"
         elif delta == 1:
             day = "tomorrow"
-        names = plural.join([a.user_name for a in best[1]])
-        text = u"the best day is {}. {} are free".format(day, names)
+        if len(best[1]) >= meeting.num_participants:
+            # the participants may have changed, so this is kinda a guess...
+            names = ['everyone']
+        else:
+            names = [a.user_name for a in best[1]]
+        text = u"the best day is {}. {} {} free".format(
+            day, plural.join(names), plural.plural_verb('is', len(names)))
 
     bot_call = BotCall(
         thread=Thread(thread_id=meeting.thread_id),
