@@ -146,7 +146,6 @@ def send_bot_call(bot_call):
         auth=(YARN_AUTH_TOKEN, YARN_AUTH_SECRET))
 
     if resp.status_code != 200:
-        print resp
         abort(500)
 
 
