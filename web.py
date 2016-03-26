@@ -69,11 +69,11 @@ def handle_submitted(submission):
             meeting.availabilities.count(), meeting.num_participants)
 
     dates = defaultdict(list)
-    now = datetime.now()
+    today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
     for availability in meeting.availabilities.all():
         for datestr in availability.dates.split(','):
             date = datetime.strptime(datestr, "%Y-%m-%d")
-            if (date - now).days >= 0:
+            if (date - today).days >= 0:
                 dates[date].append(availability)
     best = max(dates.iteritems(), key=lambda i: (len(i[1]), i[0]))
 
@@ -81,7 +81,7 @@ def handle_submitted(submission):
     if len(best[1]) < 2:
         text = u"i couldn't find any day that works. bummer :("
     else:
-        delta = best[0] - datetime.now()
+        delta = (best[0] - today).days
         day = best[0].strftime('%A (%-m/%-d)')
         if delta == 0:
             day = "today"
