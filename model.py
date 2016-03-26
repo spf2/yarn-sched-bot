@@ -14,9 +14,7 @@ class Availability(db.Model):
     user_ident = db.Column(db.String(30))
     user_name = db.Column(db.Text)
     meeting_id = db.Column(db.Integer, db.ForeignKey('meeting.id'))
-    meeting = db.relationship(
-        'Meeting',
-        backref=db.backref('availabilities', lazy='dynamic'))
+    meeting = db.relationship('Meeting', backref=db.backref('availabilities', lazy='dynamic'))
     dates = db.Column(db.Text)  # comma-separated YYYY-MM-DD
     __table_args__ = (UniqueConstraint('meeting_id', 'user_ident'),)
 
