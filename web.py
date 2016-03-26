@@ -34,7 +34,8 @@ def handle_invocation():
         reply_text = handle_submitted(invocation.submission)
     elif (invocation.delivery.event.type == Event.ADDED and
           invocation.bot.ident in (u.ident for u in invocation.delivery.event.users)):
-        reply_text = message_reply(handle_added(invocation.delivery.thread))
+        reply_text = handle_added(invocation.delivery.thread)
+        
     return message_reply(reply_text)
 
 
