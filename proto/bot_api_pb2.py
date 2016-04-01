@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='bot_api.proto',
   package='yarn',
   syntax='proto3',
-  serialized_pb=_b('\n\rbot_api.proto\x12\x04yarn\x1a\x0c\x63ommon.proto\"\xab\x01\n\rBotInvocation\x12\x17\n\x03\x62ot\x18\x01 \x01(\x0b\x32\n.yarn.User\x12#\n\x07mention\x18\x02 \x01(\x0b\x32\x10.yarn.BotMentionH\x00\x12%\n\x08\x64\x65livery\x18\x03 \x01(\x0b\x32\x11.yarn.BotDeliveryH\x00\x12-\n\nsubmission\x18\x04 \x01(\x0b\x32\x17.yarn.BotFormSubmissionH\x00\x42\x06\n\x04\x63\x61ll\"J\n\nBotMention\x12\x1c\n\x06thread\x18\x01 \x01(\x0b\x32\x0c.yarn.Thread\x12\x1e\n\x07message\x18\x02 \x01(\x0b\x32\r.yarn.Message\"v\n\x0b\x42otDelivery\x12\x1c\n\x06thread\x18\x01 \x01(\x0b\x32\x0c.yarn.Thread\x12 \n\x07message\x18\x02 \x01(\x0b\x32\r.yarn.MessageH\x00\x12\x1c\n\x05\x65vent\x18\x03 \x01(\x0b\x32\x0b.yarn.EventH\x00\x42\t\n\x07payload\"G\n\x11\x42otFormSubmission\x12\x18\n\x04user\x18\x01 \x01(\x0b\x32\n.yarn.User\x12\x18\n\x04\x66orm\x18\x02 \x01(\x0b\x32\n.yarn.Form\"4\n\x12\x42otInvocationReply\x12\x1e\n\x07message\x18\x01 \x01(\x0b\x32\r.yarn.Message\"\xb4\x01\n\x07\x42otCall\x12\x17\n\x03\x62ot\x18\x01 \x01(\x0b\x32\n.yarn.User\x12\x1e\n\x06thread\x18\x02 \x01(\x0b\x32\x0c.yarn.ThreadH\x00\x12\x1a\n\x04user\x18\x03 \x01(\x0b\x32\n.yarn.UserH\x00\x12 \n\x07message\x18\x04 \x01(\x0b\x32\r.yarn.MessageH\x01\x12\x1a\n\x04\x66orm\x18\x05 \x01(\x0b\x32\n.yarn.FormH\x01\x42\x0b\n\trecipientB\t\n\x07payloadB\x04Z\x02pbb\x06proto3')
+  serialized_pb=_b('\n\rbot_api.proto\x12\x04yarn\x1a\x0c\x63ommon.proto\"\xb1\x01\n\rBotInvocation\x12\x17\n\x03\x62ot\x18\x01 \x01(\x0b\x32\n.yarn.User\x12#\n\x07mention\x18\x02 \x01(\x0b\x32\x10.yarn.BotMentionH\x00\x12%\n\x08\x64\x65livery\x18\x03 \x01(\x0b\x32\x11.yarn.BotDeliveryH\x00\x12-\n\nsubmission\x18\x04 \x01(\x0b\x32\x17.yarn.BotFormSubmissionH\x00\x42\x0c\n\ninvocation\"J\n\nBotMention\x12\x1c\n\x06thread\x18\x01 \x01(\x0b\x32\x0c.yarn.Thread\x12\x1e\n\x07message\x18\x02 \x01(\x0b\x32\r.yarn.Message\"v\n\x0b\x42otDelivery\x12\x1c\n\x06thread\x18\x01 \x01(\x0b\x32\x0c.yarn.Thread\x12 \n\x07message\x18\x02 \x01(\x0b\x32\r.yarn.MessageH\x00\x12\x1c\n\x05\x65vent\x18\x03 \x01(\x0b\x32\x0b.yarn.EventH\x00\x42\t\n\x07payload\"G\n\x11\x42otFormSubmission\x12\x18\n\x04user\x18\x01 \x01(\x0b\x32\n.yarn.User\x12\x18\n\x04\x66orm\x18\x02 \x01(\x0b\x32\n.yarn.Form\"h\n\x12\x42otInvocationReply\x12\x1e\n\x07message\x18\x01 \x01(\x0b\x32\r.yarn.Message\x12\x18\n\x04\x66orm\x18\x02 \x01(\x0b\x32\n.yarn.Form\x12\x18\n\x10\x61ll_participants\x18\x03 \x01(\x08\"\xb4\x01\n\x07\x42otCall\x12\x17\n\x03\x62ot\x18\x01 \x01(\x0b\x32\n.yarn.User\x12\x1e\n\x06thread\x18\x02 \x01(\x0b\x32\x0c.yarn.ThreadH\x00\x12\x1a\n\x04user\x18\x03 \x01(\x0b\x32\n.yarn.UserH\x00\x12 \n\x07message\x18\x04 \x01(\x0b\x32\r.yarn.MessageH\x01\x12\x1a\n\x04\x66orm\x18\x05 \x01(\x0b\x32\n.yarn.FormH\x01\x42\x0b\n\trecipientB\t\n\x07payloadB\x04Z\x02pbb\x06proto3')
   ,
   dependencies=[common__pb2.DESCRIPTOR,])
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
@@ -75,11 +75,11 @@ _BOTINVOCATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
     _descriptor.OneofDescriptor(
-      name='call', full_name='yarn.BotInvocation.call',
+      name='invocation', full_name='yarn.BotInvocation.invocation',
       index=0, containing_type=None, fields=[]),
   ],
   serialized_start=38,
-  serialized_end=209,
+  serialized_end=215,
 )
 
 
@@ -116,8 +116,8 @@ _BOTMENTION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=211,
-  serialized_end=285,
+  serialized_start=217,
+  serialized_end=291,
 )
 
 
@@ -164,8 +164,8 @@ _BOTDELIVERY = _descriptor.Descriptor(
       name='payload', full_name='yarn.BotDelivery.payload',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=287,
-  serialized_end=405,
+  serialized_start=293,
+  serialized_end=411,
 )
 
 
@@ -202,8 +202,8 @@ _BOTFORMSUBMISSION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=407,
-  serialized_end=478,
+  serialized_start=413,
+  serialized_end=484,
 )
 
 
@@ -221,6 +221,20 @@ _BOTINVOCATIONREPLY = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='form', full_name='yarn.BotInvocationReply.form', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='all_participants', full_name='yarn.BotInvocationReply.all_participants', index=2,
+      number=3, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -233,8 +247,8 @@ _BOTINVOCATIONREPLY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=480,
-  serialized_end=532,
+  serialized_start=486,
+  serialized_end=590,
 )
 
 
@@ -298,23 +312,23 @@ _BOTCALL = _descriptor.Descriptor(
       name='payload', full_name='yarn.BotCall.payload',
       index=1, containing_type=None, fields=[]),
   ],
-  serialized_start=535,
-  serialized_end=715,
+  serialized_start=593,
+  serialized_end=773,
 )
 
 _BOTINVOCATION.fields_by_name['bot'].message_type = common__pb2._USER
 _BOTINVOCATION.fields_by_name['mention'].message_type = _BOTMENTION
 _BOTINVOCATION.fields_by_name['delivery'].message_type = _BOTDELIVERY
 _BOTINVOCATION.fields_by_name['submission'].message_type = _BOTFORMSUBMISSION
-_BOTINVOCATION.oneofs_by_name['call'].fields.append(
+_BOTINVOCATION.oneofs_by_name['invocation'].fields.append(
   _BOTINVOCATION.fields_by_name['mention'])
-_BOTINVOCATION.fields_by_name['mention'].containing_oneof = _BOTINVOCATION.oneofs_by_name['call']
-_BOTINVOCATION.oneofs_by_name['call'].fields.append(
+_BOTINVOCATION.fields_by_name['mention'].containing_oneof = _BOTINVOCATION.oneofs_by_name['invocation']
+_BOTINVOCATION.oneofs_by_name['invocation'].fields.append(
   _BOTINVOCATION.fields_by_name['delivery'])
-_BOTINVOCATION.fields_by_name['delivery'].containing_oneof = _BOTINVOCATION.oneofs_by_name['call']
-_BOTINVOCATION.oneofs_by_name['call'].fields.append(
+_BOTINVOCATION.fields_by_name['delivery'].containing_oneof = _BOTINVOCATION.oneofs_by_name['invocation']
+_BOTINVOCATION.oneofs_by_name['invocation'].fields.append(
   _BOTINVOCATION.fields_by_name['submission'])
-_BOTINVOCATION.fields_by_name['submission'].containing_oneof = _BOTINVOCATION.oneofs_by_name['call']
+_BOTINVOCATION.fields_by_name['submission'].containing_oneof = _BOTINVOCATION.oneofs_by_name['invocation']
 _BOTMENTION.fields_by_name['thread'].message_type = common__pb2._THREAD
 _BOTMENTION.fields_by_name['message'].message_type = common__pb2._MESSAGE
 _BOTDELIVERY.fields_by_name['thread'].message_type = common__pb2._THREAD
@@ -329,6 +343,7 @@ _BOTDELIVERY.fields_by_name['event'].containing_oneof = _BOTDELIVERY.oneofs_by_n
 _BOTFORMSUBMISSION.fields_by_name['user'].message_type = common__pb2._USER
 _BOTFORMSUBMISSION.fields_by_name['form'].message_type = common__pb2._FORM
 _BOTINVOCATIONREPLY.fields_by_name['message'].message_type = common__pb2._MESSAGE
+_BOTINVOCATIONREPLY.fields_by_name['form'].message_type = common__pb2._FORM
 _BOTCALL.fields_by_name['bot'].message_type = common__pb2._USER
 _BOTCALL.fields_by_name['thread'].message_type = common__pb2._THREAD
 _BOTCALL.fields_by_name['user'].message_type = common__pb2._USER

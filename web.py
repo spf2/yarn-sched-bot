@@ -11,7 +11,7 @@ from google.protobuf import json_format
 from model import db, Meeting, Availability, current_meeting
 from proto.bot_api_pb2 import BotInvocation, BotCall
 from proto.common_pb2 import Event, Form, FormItem, FormSelect, FormOption,\
-    Thread, Message
+    Thread, Message, MediaItem
 
 
 YARN_API_URL = 'http://localhost:5000/api/v1/call'
@@ -128,6 +128,7 @@ def poll_users(thread):
             thread_id=thread.thread_id,
             label=u"i'm trying to find a time for {}".format(thread.topic),
             items=[FormItem(select=FormSelect(
+                type=FormSelect.DATE,
                 label=u"what days work for you? choose",
                 multiple=True,
                 options=date_options()))])))
@@ -153,14 +154,8 @@ def date_options():
     now = datetime.now()
     for i in xrange(7):
         d = timedelta(days=i) + now
-        if i == 0:
-            name = 'today'
-        elif i == 1:
-            name = 'tmrw'
-        else:
-            name = d.strftime('%a').lower()
         value = d.strftime('%Y-%m-%d')
-        yield FormOption(name=name, value=value)
+        yield FormOption(value=value, media=MediaItem(url="url"))
 
 
 def message_reply(text):

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PROTOS=/Users/spf/YN/bot-api/proto
+PROTOS=../bot-api/proto
 PYOUT=proto
 
 echo rm pyc
