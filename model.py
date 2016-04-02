@@ -1,3 +1,5 @@
+import logging
+
 from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy import UniqueConstraint
 
@@ -7,6 +9,19 @@ def current_meeting(thread_id):
     meeting = Meeting.query.filter_by(thread_id=thread_id).order_by(Meeting.created.desc()).first()
     if meeting and not meeting.done:
         return meeting
+
+
+def insert_or_update_availability(meeting, user, dates):
+    avail = Availability.query.filter_by(meeting=meeting, user_ident=user.ident).first()
+    logging.info(avail)
+    if avail:
+        avail.dates = dates
+    else:
+        db.session.add(Availability(
+            meeting=meeting,
+            user_ident=user.ident,
+            user_name=user.name,
+            dates=dates))
 
 
 class Availability(db.Model):

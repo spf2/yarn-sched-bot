@@ -5,11 +5,12 @@ import requests
 
 from collections import defaultdict
 from datetime import datetime, timedelta
-from flask import Flask, request, jsonify, abort
+from flask import Flask, request, abort
 from google.protobuf import json_format
 
-from model import db, Meeting, Availability, current_meeting
-from proto.bot_api_pb2 import BotInvocation, BotCall
+from model import db, Meeting, Availability, current_meeting, \
+    insert_or_update_availability
+from proto.bot_api_pb2 import BotInvocation, BotInvocationReply, BotCall
 from proto.common_pb2 import Event, Form, FormItem, FormSelect, FormOption,\
     Thread, Message, MediaItem
 
@@ -26,47 +27,41 @@ plural = inflect.engine()
 
 @app.route("/", methods=['POST'])
 def handle_invocation():
+    reply = None
     invocation = json_format.Parse(request.data, BotInvocation())
-    reply_text = ""
     if invocation.HasField('mention'):
-        reply_text = handle_mentioned(invocation.bot, invocation.mention)
+        reply = handle_mentioned(invocation.bot, invocation.mention)
     elif invocation.HasField('submission'):
-        reply_text = handle_submitted(invocation.submission)
+        reply = handle_submitted(invocation.submission)
     elif (invocation.delivery.event.type == Event.ADDED and
           invocation.bot.ident in (u.ident for u in invocation.delivery.event.users)):
-        reply_text = handle_added(invocation.delivery.thread)
+        reply = handle_added(invocation.delivery.thread)
 
-    return message_reply(reply_text)
+    return json_format.MessageToJson(reply) if reply else ""
 
 
 def handle_mentioned(me, mention):
     if me.ident in (p.user.ident for p in mention.thread.participants):
-        if num_users(mention.thread) < 2:
-            return u"i need at least 2 people to be useful... /add some?"
+        return BotInvocationReply(
+            form=poll_users(mention.thread),
+            all_participants=True)
 
-        poll_users(mention.thread)
-        return u"yo. i'll message you individually and report back..."
-
-    return u"hi! i can help find times to meet. type /add @sched"
+    return reply_all(u"hi! i can help find times to meet. type /add @sched")
 
 
 def handle_submitted(submission):
     meeting = current_meeting(submission.form.thread_id)
     if not meeting:
-        return u"hm, it looks like you're too late?"
+        return reply(u"hm, it looks like you're too late?")
 
     dates = ','.join(o.value for o in submission.form.items[0].select.options
                              if o.selected)
-    avail = db.session.merge(Availability(
-        meeting=meeting,
-        user_ident=submission.user.ident,
-        user_name=submission.user.name,
-        dates=dates))
+    insert_or_update_availability(meeting, submission.user, dates)
     db.session.commit()
 
     if meeting.availabilities.count() < meeting.num_participants:
-        return u"thanks. {} of {} have responded".format(
-            meeting.availabilities.count(), meeting.num_participants)
+        return reply(u"thanks. {} of {} have responded".format(
+            meeting.availabilities.count(), meeting.num_participants))
 
     dates = defaultdict(list)
     today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
@@ -75,44 +70,32 @@ def handle_submitted(submission):
             date = datetime.strptime(datestr, "%Y-%m-%d")
             if (date - today).days >= 0:
                 dates[date].append(availability)
-    best = max(dates.iteritems(), key=lambda i: (len(i[1]), i[0]))
+    best = min(dates.iteritems(), key=lambda i: (-len(i[1]), i[0]))
 
     text = ""
-    if len(best[1]) < 2:
-        text = u"i couldn't find any day that works. bummer :("
+    delta = (best[0] - today).days
+    day = best[0].strftime('%A (%-m/%-d)')
+    if delta == 0:
+        day = "today"
+    elif delta == 1:
+        day = "tomorrow"
+
+    if len(best[1]) >= meeting.num_participants:
+        # the participants may have changed, so this is kinda a guess...
+        names = ['everyone']
     else:
-        delta = (best[0] - today).days
-        day = best[0].strftime('%A (%-m/%-d)')
-        if delta == 0:
-            day = "today"
-        elif delta == 1:
-            day = "tomorrow"
-
-        if len(best[1]) >= meeting.num_participants:
-            # the participants may have changed, so this is kinda a guess...
-            names = ['everyone']
-        else:
-            names = [a.user_name for a in best[1]]
-        text = u"the best day is {}. {} {} free".format(
-            day, plural.join(names), plural.plural_verb('is', len(names)))
-
-    send_bot_call(BotCall(
-        thread=Thread(thread_id=meeting.thread_id),
-        message=Message(text=text)))
+        names = [a.user_name for a in best[1]]
+    text = u"{} is best. {} {} free".format(
+        day, plural.join(names), plural.plural_verb('is', len(names)))
 
     meeting.done = True
     db.session.commit()
 
+    return reply_all(text)
+
 
 def handle_added(thread):
-    if num_users(thread) < 2:
-        u"after you add more people, type @sched for my help"
-        return
-
-    poll_users(thread)
-    return (
-        u"hi! i'll message the {} of you individually "
-        u"and report back".format(len(thread.participants) - 1))
+    return reply_all(u"hi! if you mention @sched i'll poll everyone for free days")
 
 
 def num_users(thread):
@@ -121,33 +104,21 @@ def num_users(thread):
 
 
 def poll_users(thread):
-    send_bot_call(BotCall(
-        thread=thread,
-        form=Form(
-            action="meeting",
-            thread_id=thread.thread_id,
-            label=u"i'm trying to find a time for {}".format(thread.topic),
-            items=[FormItem(select=FormSelect(
-                type=FormSelect.DATE,
-                label=u"what days work for you? choose",
-                multiple=True,
-                options=date_options()))])))
-
     db.session.add(Meeting(
         thread_id=thread.thread_id,
         topic=thread.topic,
         num_participants=num_users(thread)))
     db.session.commit()
 
-
-def send_bot_call(bot_call):
-    resp = requests.post(
-        YARN_API_URL,
-        json_format.MessageToJson(bot_call),
-        auth=(YARN_AUTH_TOKEN, YARN_AUTH_SECRET))
-
-    if resp.status_code != 200:
-        abort(500)
+    return Form(
+        action="meeting",
+        thread_id=thread.thread_id,
+        label=u"find a time for {}".format(thread.topic),
+        items=[FormItem(select=FormSelect(
+            type=FormSelect.DATE,
+            label=u"what days work for you?",
+            multiple=True,
+            options=date_options()))])
 
 
 def date_options():
@@ -155,13 +126,14 @@ def date_options():
     for i in xrange(7):
         d = timedelta(days=i) + now
         value = d.strftime('%Y-%m-%d')
-        yield FormOption(value=value, media=MediaItem(url="url"))
+        yield FormOption(value=value)
 
 
-def message_reply(text):
-    if not text:
-        return ""
-    return jsonify(message={'text': text})
+def reply(text):
+    return BotInvocationReply(message=Message(text=text))
+
+def reply_all(text):
+    return BotInvocationReply(message=Message(text=text), all_participants=True)
 
 
 if __name__ == "__main__":
