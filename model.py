@@ -5,15 +5,19 @@ from sqlalchemy import UniqueConstraint
 
 db = SQLAlchemy()
 
+
 def current_meeting(thread_id):
-    meeting = Meeting.query.filter_by(thread_id=thread_id).order_by(Meeting.created.desc()).first()
-    if meeting and not meeting.done:
-        return meeting
+    meeting = Meeting.query\
+        .filter_by(thread_id=thread_id)\
+        .order_by(Meeting.created.desc())\
+        .first()
+    return meeting
 
 
 def insert_or_update_availability(meeting, user, dates):
-    avail = Availability.query.filter_by(meeting=meeting, user_ident=user.ident).first()
-    logging.info(avail)
+    avail = Availability.query\
+        .filter_by(meeting=meeting, user_ident=user.ident)\
+        .first()
     if avail:
         avail.dates = dates
     else:
@@ -22,6 +26,7 @@ def insert_or_update_availability(meeting, user, dates):
             user_ident=user.ident,
             user_name=user.name,
             dates=dates))
+    db.session.commit()
 
 
 class Availability(db.Model):

@@ -63,7 +63,7 @@ def handle_mentioned(me, mention):
         .lower()
     meeting = current_meeting(mention.thread.thread_id)
     if command:
-        if meeting:
+        if meeting and not meeting.done:
             known = ['done', 'nevermind', 'nm', 'quit', 'cancel']
             if command in known:
                 meeting.done = True
@@ -84,7 +84,7 @@ def handle_mentioned(me, mention):
                 form=poll_users(mention.thread, mention.message.sender),
                 all_participants=True)
     else:
-        if meeting:
+        if meeting and not meeting.done:
             return reply_in_progress(meeting)
         else:
             return reply(u"Type @sched weekday to find a day to meet")
@@ -93,12 +93,11 @@ def handle_mentioned(me, mention):
 def handle_submitted(submission):
     meeting = current_meeting(submission.form.thread_id)
     if not meeting:
-        return reply(u"Hm, it looks like you're too late?")
+        return reply(u"I can't find that meeting. My bad.")
 
     dates = ','.join(o.value for o in submission.form.items[0].select.options
                              if o.selected)
     insert_or_update_availability(meeting, submission.user, dates)
-    db.session.commit()
 
     if meeting.availabilities.count() < meeting.num_participants:
         return reply(u"Thanks. {}/{} have responded so far".format(
@@ -145,16 +144,6 @@ def get_status(meeting):
         " so far" if not meeting.done else "",
         plural.join(names),
         plural.plural_verb('is', len(names)))
-
-
-def responses(date, participants):
-    if len(best[1]) >= meeting.num_participants:
-        # the participants may have changed, so this is kinda a guess...
-        names = ['everyone']
-    else:
-        names = [a.user_name for a in best[1]]
-    text = u"{} is best. {} {} free".format(
-        day, plural.join(names), plural.plural_verb('is', len(names)))
 
 
 def handle_added(thread):
