@@ -158,7 +158,9 @@ def responses(date, participants):
 
 
 def handle_added(thread):
-    return reply_all(u"hi! if you mention @sched i'll poll everyone for free days")
+    return reply_all(
+        u"Hi! Thanks for adding me! "
+        u"To poll everyone for free days, type @sched weekday")
 
 
 def num_users(thread):
