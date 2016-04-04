@@ -1,7 +1,13 @@
+# This is a bot for finding the best day for a group of people. It works
+# a lot like doodle.com.
+# It expects to be added to the thread so it greet and poll new users, and
+# also so it can recur automatically if desired.
+
 import inflect
 import logging
 import os
 import requests
+import string
 
 from collections import defaultdict
 from datetime import datetime, timedelta
@@ -15,18 +21,25 @@ from proto.common_pb2 import Event, Form, FormItem, FormSelect, FormOption,\
     Thread, Message, MediaItem
 
 
-YARN_API_URL = 'http://localhost:5000/api/v1/call'
+if os.environ.get('YARN_ENVIRONMENT') == 'prod':
+    YARN_API_URL = 'https://yarn-service.herokuapp.com/api/v1/call'
+else:
+    YARN_API_URL = 'http://localhost:5000/api/v1/call'
+
 YARN_AUTH_TOKEN = os.environ['YARN_AUTH_TOKEN']
 YARN_AUTH_SECRET = os.environ['YARN_AUTH_SECRET']
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 plural = inflect.engine()
 
 
-@app.route("/", methods=['POST'])
+@app.route("/", methods=['GET', 'POST'])
 def handle_invocation():
+    if request.method == 'GET':
+        return "@sched"
     reply = None
     invocation = json_format.Parse(request.data, BotInvocation())
     if invocation.HasField('mention'):
@@ -41,18 +54,46 @@ def handle_invocation():
 
 
 def handle_mentioned(me, mention):
-    if me.ident in (p.user.ident for p in mention.thread.participants):
-        return BotInvocationReply(
-            form=poll_users(mention.thread),
-            all_participants=True)
+    if me.ident not in (p.user.ident for p in mention.thread.participants):
+        return reply_all(u"Hi! I can help find times to meet. Type /add @sched")
 
-    return reply_all(u"hi! i can help find times to meet. type /add @sched")
+    command = mention.message.text\
+        .replace(r'@sched', '')\
+        .strip(string.punctuation + string.whitespace)\
+        .lower()
+    meeting = current_meeting(mention.thread.thread_id)
+    if command:
+        if meeting:
+            known = ['done', 'nevermind', 'nm', 'quit', 'cancel']
+            if command in known:
+                meeting.done = True
+                db.session.commit()
+            if command == 'done':
+                return reply_all(get_status(meeting))
+            elif command in known:
+                return reply_all(
+                    u"Canceled by {}. Type @sched to start again".format(
+                        mention.message.sender.name))
+            else:
+                return reply_in_progress(meeting)
+        else:
+            if command != 'weekday':
+                return reply(u"I only know about weekday meetings so far...")
+
+            return BotInvocationReply(
+                form=poll_users(mention.thread, mention.message.sender),
+                all_participants=True)
+    else:
+        if meeting:
+            return reply_in_progress(meeting)
+        else:
+            return reply(u"Type @sched weekday to find a day to meet")
 
 
 def handle_submitted(submission):
     meeting = current_meeting(submission.form.thread_id)
     if not meeting:
-        return reply(u"hm, it looks like you're too late?")
+        return reply(u"Hm, it looks like you're too late?")
 
     dates = ','.join(o.value for o in submission.form.items[0].select.options
                              if o.selected)
@@ -60,9 +101,29 @@ def handle_submitted(submission):
     db.session.commit()
 
     if meeting.availabilities.count() < meeting.num_participants:
-        return reply(u"thanks. {} of {} have responded".format(
+        return reply(u"Thanks. {}/{} have responded so far".format(
             meeting.availabilities.count(), meeting.num_participants))
 
+    meeting.done = True
+    db.session.commit()
+
+    return reply_all(get_status(meeting))
+
+
+def reply_in_progress(meeting):
+    status = get_status(meeting)
+    return reply(
+        u"{}/{} have responded. {}. "
+        u"Type @sched done or nevermind "
+        u"to announce result or stop poll".format(
+            meeting.availabilities.count(),
+            meeting.num_participants,
+            status))
+
+
+def get_status(meeting):
+    if meeting.availabilities.count() == 0:
+        return u"No one has responded yet"
     dates = defaultdict(list)
     today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
     for availability in meeting.availabilities.all():
@@ -72,14 +133,21 @@ def handle_submitted(submission):
                 dates[date].append(availability)
     best = min(dates.iteritems(), key=lambda i: (-len(i[1]), i[0]))
 
-    text = ""
     delta = (best[0] - today).days
     day = best[0].strftime('%A (%-m/%-d)')
     if delta == 0:
-        day = "today"
+        day = "Today"
     elif delta == 1:
-        day = "tomorrow"
+        day = "Tomorrow"
+    names = [a.user_name for a in best[1]]
+    return u"{} is best{}. {} {} free".format(
+        day,
+        " so far" if not meeting.done else "",
+        plural.join(names),
+        plural.plural_verb('is', len(names)))
 
+
+def responses(date, participants):
     if len(best[1]) >= meeting.num_participants:
         # the participants may have changed, so this is kinda a guess...
         names = ['everyone']
@@ -87,11 +155,6 @@ def handle_submitted(submission):
         names = [a.user_name for a in best[1]]
     text = u"{} is best. {} {} free".format(
         day, plural.join(names), plural.plural_verb('is', len(names)))
-
-    meeting.done = True
-    db.session.commit()
-
-    return reply_all(text)
 
 
 def handle_added(thread):
@@ -103,7 +166,7 @@ def num_users(thread):
                  if p.user.ident.startswith('user:'))
 
 
-def poll_users(thread):
+def poll_users(thread, sender):
     db.session.add(Meeting(
         thread_id=thread.thread_id,
         topic=thread.topic,
@@ -113,20 +176,21 @@ def poll_users(thread):
     return Form(
         action="meeting",
         thread_id=thread.thread_id,
-        label=u"find a time for {}".format(thread.topic),
+        label=u"{} asked me to find day for \"{}\"".format(sender.name, thread.topic),
         items=[FormItem(select=FormSelect(
             type=FormSelect.DATE,
-            label=u"what days work for you?",
+            label=u"What days work for you?",
             multiple=True,
             options=date_options()))])
 
 
-def date_options():
+def date_options(num=7):
     now = datetime.now()
-    for i in xrange(7):
+    for i in xrange(num):
         d = timedelta(days=i) + now
         value = d.strftime('%Y-%m-%d')
-        yield FormOption(value=value)
+        if d.isoweekday() in range(1, 6):
+            yield FormOption(value=value)
 
 
 def reply(text):
