@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='common.proto',
   package='yarn',
   syntax='proto3',
-  serialized_pb=_b('\n\x0c\x63ommon.proto\x12\x04yarn\x1a\x1fgoogle/protobuf/timestamp.proto\"#\n\x04User\x12\r\n\x05ident\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\"\xef\x01\n\x06Thread\x12\x11\n\tthread_id\x18\x01 \x01(\t\x12\r\n\x05topic\x18\x02 \x01(\t\x12+\n\x07\x63reated\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12+\n\x07updated\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\'\n\x0cparticipants\x18\x05 \x03(\x0b\x32\x11.yarn.Participant\x12\x1b\n\x07\x63reator\x18\x06 \x01(\x0b\x32\n.yarn.User\x12#\n\x08location\x18\x07 \x01(\x0b\x32\x11.yarn.GeoLocation\"\xca\x01\n\x0bParticipant\x12\x18\n\x04user\x18\x01 \x01(\x0b\x32\n.yarn.User\x12\x1e\n\ninvited_by\x18\x02 \x01(\x0b\x32\n.yarn.User\x12+\n\x07invited\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12*\n\x06joined\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12(\n\x04left\x18\x05 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"C\n\x0bGeoLocation\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\t\x12\x10\n\x08latitude\x18\x02 \x01(\x02\x12\x11\n\tlongitude\x18\x03 \x01(\x02\"\x86\x01\n\x07Message\x12+\n\x07\x63reated\x18\x01 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x1a\n\x06sender\x18\x02 \x01(\x0b\x32\n.yarn.User\x12\x0c\n\x04text\x18\x03 \x01(\t\x12$\n\x0bmedia_items\x18\x04 \x03(\x0b\x32\x0f.yarn.MediaItem\"\x18\n\tMediaItem\x12\x0b\n\x03url\x18\x01 \x01(\t\"\x80\x02\n\x05\x45vent\x12#\n\x04type\x18\x01 \x01(\x0e\x32\x15.yarn.Event.EventType\x12+\n\x07\x63reated\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x19\n\x05users\x18\x03 \x03(\x0b\x32\n.yarn.User\"\x89\x01\n\tEventType\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x0b\n\x07\x43REATED\x10\x01\x12\x0b\n\x07INVITED\x10\x02\x12\t\n\x05\x41\x44\x44\x45\x44\x10\x03\x12\n\n\x06JOINED\x10\x04\x12\x08\n\x04LEFT\x10\x05\x12\x0b\n\x07REMOVED\x10\x06\x12\x11\n\rCHANGED_TOPIC\x10\n\x12\x14\n\x10\x43HANGED_LOCATION\x10\x0b\"\xb0\x01\n\x04\x46orm\x12\x0f\n\x07\x66orm_id\x18\x01 \x01(\t\x12\x19\n\x05\x61gent\x18\x02 \x01(\x0b\x32\n.yarn.User\x12\x0e\n\x06\x61\x63tion\x18\x03 \x01(\t\x12\x11\n\tthread_id\x18\x04 \x01(\t\x12\r\n\x05label\x18\x05 \x01(\t\x12\x1d\n\x05items\x18\x06 \x03(\x0b\x32\x0e.yarn.FormItem\x12+\n\x07\x63reated\x18\x07 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"[\n\x08\x46ormItem\x12 \n\x05input\x18\x01 \x01(\x0b\x32\x0f.yarn.FormInputH\x00\x12\"\n\x06select\x18\x02 \x01(\x0b\x32\x10.yarn.FormSelectH\x00\x42\t\n\x07\x65lement\"\xb5\x01\n\tFormInput\x12+\n\x04type\x18\x01 \x01(\x0e\x32\x1d.yarn.FormInput.FormInputType\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\r\n\x05label\x18\x03 \x01(\t\x12\r\n\x05value\x18\x04 \x01(\t\"O\n\rFormInputType\x12\x0f\n\x0bUNSPECIFIED\x10\x00\x12\x08\n\x04NAME\x10\x01\x12\t\n\x05PHONE\x10\x02\x12\x0b\n\x07\x43ONTACT\x10\x03\x12\x0b\n\x07\x42OOLEAN\x10\x04\"\xc8\x01\n\nFormSelect\x12-\n\x04type\x18\x01 \x01(\x0e\x32\x1f.yarn.FormSelect.FormSelectType\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x10\n\x08multiple\x18\x03 \x01(\x08\x12\r\n\x05label\x18\x04 \x01(\t\x12!\n\x07options\x18\x05 \x03(\x0b\x32\x10.yarn.FormOption\"9\n\x0e\x46ormSelectType\x12\x0f\n\x0bUNSPECIFIED\x10\x00\x12\x08\n\x04\x44\x41TE\x10\x01\x12\x0c\n\x08\x44\x41TETIME\x10\x02\"[\n\nFormOption\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\x12\x10\n\x08selected\x18\x03 \x01(\x08\x12\x1e\n\x05media\x18\x04 \x01(\x0b\x32\x0f.yarn.MediaItemB\x04Z\x02pbb\x06proto3')
+  serialized_pb=_b('\n\x0c\x63ommon.proto\x12\x04yarn\x1a\x1fgoogle/protobuf/timestamp.proto\"#\n\x04User\x12\r\n\x05ident\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\"\xef\x01\n\x06Thread\x12\x11\n\tthread_id\x18\x01 \x01(\t\x12\r\n\x05topic\x18\x02 \x01(\t\x12+\n\x07\x63reated\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12+\n\x07updated\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\'\n\x0cparticipants\x18\x05 \x03(\x0b\x32\x11.yarn.Participant\x12\x1b\n\x07\x63reator\x18\x06 \x01(\x0b\x32\n.yarn.User\x12#\n\x08location\x18\x07 \x01(\x0b\x32\x11.yarn.GeoLocation\"\xca\x01\n\x0bParticipant\x12\x18\n\x04user\x18\x01 \x01(\x0b\x32\n.yarn.User\x12\x1e\n\ninvited_by\x18\x02 \x01(\x0b\x32\n.yarn.User\x12+\n\x07invited\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12*\n\x06joined\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12(\n\x04left\x18\x05 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"C\n\x0bGeoLocation\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\t\x12\x10\n\x08latitude\x18\x02 \x01(\x02\x12\x11\n\tlongitude\x18\x03 \x01(\x02\"\x9a\x01\n\x07Message\x12\x12\n\nmessage_id\x18\x01 \x01(\t\x12+\n\x07\x63reated\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x1a\n\x06sender\x18\x03 \x01(\x0b\x32\n.yarn.User\x12\x0c\n\x04text\x18\x04 \x01(\t\x12$\n\x0bmedia_items\x18\x05 \x03(\x0b\x32\x0f.yarn.MediaItem\"\x18\n\tMediaItem\x12\x0b\n\x03url\x18\x01 \x01(\t\"\xad\x02\n\x05\x45vent\x12#\n\x04type\x18\x01 \x01(\x0e\x32\x15.yarn.Event.EventType\x12\x10\n\x08\x65vent_id\x18\x02 \x01(\t\x12\x19\n\x05\x61\x63tor\x18\x03 \x01(\x0b\x32\n.yarn.User\x12+\n\x07\x63reated\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x19\n\x05users\x18\x05 \x03(\x0b\x32\n.yarn.User\"\x89\x01\n\tEventType\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x0b\n\x07\x43REATED\x10\x01\x12\x0b\n\x07INVITED\x10\x02\x12\t\n\x05\x41\x44\x44\x45\x44\x10\x03\x12\n\n\x06JOINED\x10\x04\x12\x08\n\x04LEFT\x10\x05\x12\x0b\n\x07REMOVED\x10\x06\x12\x11\n\rCHANGED_TOPIC\x10\n\x12\x14\n\x10\x43HANGED_LOCATION\x10\x0b\"\xb0\x01\n\x04\x46orm\x12\x0f\n\x07\x66orm_id\x18\x01 \x01(\t\x12\x19\n\x05\x61gent\x18\x02 \x01(\x0b\x32\n.yarn.User\x12\x0e\n\x06\x61\x63tion\x18\x03 \x01(\t\x12\x11\n\tthread_id\x18\x04 \x01(\t\x12\r\n\x05label\x18\x05 \x01(\t\x12\x1d\n\x05items\x18\x06 \x03(\x0b\x32\x0e.yarn.FormItem\x12+\n\x07\x63reated\x18\x07 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"[\n\x08\x46ormItem\x12 \n\x05input\x18\x01 \x01(\x0b\x32\x0f.yarn.FormInputH\x00\x12\"\n\x06select\x18\x02 \x01(\x0b\x32\x10.yarn.FormSelectH\x00\x42\t\n\x07\x65lement\"\xb5\x01\n\tFormInput\x12+\n\x04type\x18\x01 \x01(\x0e\x32\x1d.yarn.FormInput.FormInputType\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\r\n\x05label\x18\x03 \x01(\t\x12\r\n\x05value\x18\x04 \x01(\t\"O\n\rFormInputType\x12\x0f\n\x0bUNSPECIFIED\x10\x00\x12\x08\n\x04NAME\x10\x01\x12\t\n\x05PHONE\x10\x02\x12\x0b\n\x07\x43ONTACT\x10\x03\x12\x0b\n\x07\x42OOLEAN\x10\x04\"\xc8\x01\n\nFormSelect\x12-\n\x04type\x18\x01 \x01(\x0e\x32\x1f.yarn.FormSelect.FormSelectType\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\x10\n\x08multiple\x18\x03 \x01(\x08\x12\r\n\x05label\x18\x04 \x01(\t\x12!\n\x07options\x18\x05 \x03(\x0b\x32\x10.yarn.FormOption\"9\n\x0e\x46ormSelectType\x12\x0f\n\x0bUNSPECIFIED\x10\x00\x12\x08\n\x04\x44\x41TE\x10\x01\x12\x0c\n\x08\x44\x41TETIME\x10\x02\"[\n\nFormOption\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t\x12\x10\n\x08selected\x18\x03 \x01(\x08\x12\x1e\n\x05media\x18\x04 \x01(\x0b\x32\x0f.yarn.MediaItemB\x04Z\x02pbb\x06proto3')
   ,
   dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
@@ -72,8 +72,8 @@ _EVENT_EVENTTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=891,
-  serialized_end=1028,
+  serialized_start=956,
+  serialized_end=1093,
 )
 _sym_db.RegisterEnumDescriptor(_EVENT_EVENTTYPE)
 
@@ -106,8 +106,8 @@ _FORMINPUT_FORMINPUTTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1405,
-  serialized_end=1484,
+  serialized_start=1470,
+  serialized_end=1549,
 )
 _sym_db.RegisterEnumDescriptor(_FORMINPUT_FORMINPUTTYPE)
 
@@ -132,8 +132,8 @@ _FORMSELECT_FORMSELECTTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1630,
-  serialized_end=1687,
+  serialized_start=1695,
+  serialized_end=1752,
 )
 _sym_db.RegisterEnumDescriptor(_FORMSELECT_FORMSELECTTYPE)
 
@@ -361,29 +361,36 @@ _MESSAGE = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='created', full_name='yarn.Message.created', index=0,
-      number=1, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      name='message_id', full_name='yarn.Message.message_id', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='sender', full_name='yarn.Message.sender', index=1,
+      name='created', full_name='yarn.Message.created', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='text', full_name='yarn.Message.text', index=2,
-      number=3, type=9, cpp_type=9, label=1,
+      name='sender', full_name='yarn.Message.sender', index=2,
+      number=3, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='text', full_name='yarn.Message.text', index=3,
+      number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='media_items', full_name='yarn.Message.media_items', index=3,
-      number=4, type=11, cpp_type=10, label=3,
+      name='media_items', full_name='yarn.Message.media_items', index=4,
+      number=5, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -401,7 +408,7 @@ _MESSAGE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=609,
-  serialized_end=743,
+  serialized_end=763,
 )
 
 
@@ -431,8 +438,8 @@ _MEDIAITEM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=745,
-  serialized_end=769,
+  serialized_start=765,
+  serialized_end=789,
 )
 
 
@@ -451,15 +458,29 @@ _EVENT = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='created', full_name='yarn.Event.created', index=1,
-      number=2, type=11, cpp_type=10, label=1,
+      name='event_id', full_name='yarn.Event.event_id', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='actor', full_name='yarn.Event.actor', index=2,
+      number=3, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='users', full_name='yarn.Event.users', index=2,
-      number=3, type=11, cpp_type=10, label=3,
+      name='created', full_name='yarn.Event.created', index=3,
+      number=4, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='users', full_name='yarn.Event.users', index=4,
+      number=5, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -477,8 +498,8 @@ _EVENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=772,
-  serialized_end=1028,
+  serialized_start=792,
+  serialized_end=1093,
 )
 
 
@@ -550,8 +571,8 @@ _FORM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1031,
-  serialized_end=1207,
+  serialized_start=1096,
+  serialized_end=1272,
 )
 
 
@@ -591,8 +612,8 @@ _FORMITEM = _descriptor.Descriptor(
       name='element', full_name='yarn.FormItem.element',
       index=0, containing_type=None, fields=[]),
   ],
-  serialized_start=1209,
-  serialized_end=1300,
+  serialized_start=1274,
+  serialized_end=1365,
 )
 
 
@@ -644,8 +665,8 @@ _FORMINPUT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1303,
-  serialized_end=1484,
+  serialized_start=1368,
+  serialized_end=1549,
 )
 
 
@@ -704,8 +725,8 @@ _FORMSELECT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1487,
-  serialized_end=1687,
+  serialized_start=1552,
+  serialized_end=1752,
 )
 
 
@@ -756,8 +777,8 @@ _FORMOPTION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1689,
-  serialized_end=1780,
+  serialized_start=1754,
+  serialized_end=1845,
 )
 
 _THREAD.fields_by_name['created'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
@@ -774,6 +795,7 @@ _MESSAGE.fields_by_name['created'].message_type = google_dot_protobuf_dot_timest
 _MESSAGE.fields_by_name['sender'].message_type = _USER
 _MESSAGE.fields_by_name['media_items'].message_type = _MEDIAITEM
 _EVENT.fields_by_name['type'].enum_type = _EVENT_EVENTTYPE
+_EVENT.fields_by_name['actor'].message_type = _USER
 _EVENT.fields_by_name['created'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
 _EVENT.fields_by_name['users'].message_type = _USER
 _EVENT_EVENTTYPE.containing_type = _EVENT
