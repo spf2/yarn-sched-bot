@@ -126,10 +126,13 @@ def get_status(meeting):
     dates = defaultdict(list)
     today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
     for availability in meeting.availabilities.all():
-        for datestr in availability.dates.split(','):
+        for datestr in (d for d in availability.dates.split(',') if d != ""):
             date = datetime.strptime(datestr, "%Y-%m-%d")
             if (date - today).days >= 0:
                 dates[date].append(availability)
+    if not dates:
+        return u"Could not find any dates that work."
+        
     best = min(dates.iteritems(), key=lambda i: (-len(i[1]), i[0]))
 
     delta = (best[0] - today).days
