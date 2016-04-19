@@ -147,7 +147,7 @@ def get_status(meeting):
 
 
 def handle_added(thread):
-    return reply_all(
+    return reply(
         u"Hi! Thanks for adding me! "
         u"To poll everyone for free days, type @sched weekday")
 
@@ -167,7 +167,7 @@ def poll_users(thread, sender):
     return Form(
         action="meeting",
         thread_id=thread.thread_id,
-        label=u"{} asked me to find day for \"{}\"".format(sender.name, thread.topic),
+        label=u"Finding a day for \"{}\"".format(sender.name, thread.topic),
         items=[FormItem(select=FormSelect(
             type=FormSelect.DATE,
             label=u"What days work for you?",
