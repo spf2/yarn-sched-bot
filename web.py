@@ -132,7 +132,7 @@ def get_status(meeting):
                 dates[date].append(availability)
     if not dates:
         return u"Could not find any dates that work."
-        
+
     best = min(dates.iteritems(), key=lambda i: (-len(i[1]), i[0]))
 
     delta = (best[0] - today).days
@@ -170,7 +170,7 @@ def poll_users(thread, sender):
     return Form(
         action="meeting",
         thread_id=thread.thread_id,
-        label=u"Finding a day for \"{}\"".format(thread.topic),
+        label=thread.topic,
         items=[FormItem(select=FormSelect(
             type=FormSelect.DATE,
             label=u"What days work for you?",
