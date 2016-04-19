@@ -6,6 +6,7 @@
 import inflect
 import logging
 import os
+import pytz
 import requests
 import string
 
@@ -124,7 +125,7 @@ def get_status(meeting):
     if meeting.availabilities.count() == 0:
         return u"No one has responded yet"
     dates = defaultdict(list)
-    today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    today = datetime.now(pytz.utc).replace(hour=0, minute=0, second=0, microsecond=0)
     for availability in meeting.availabilities.all():
         for datestr in availability.dates.split(','):
             date = datetime.strptime(datestr, "%Y-%m-%d")
@@ -176,7 +177,7 @@ def poll_users(thread, sender):
 
 
 def date_options(num=7):
-    now = datetime.now()
+    now = datetime.now(pytz.utc)
     for i in xrange(num):
         d = timedelta(days=i) + now
         value = d.strftime('%Y-%m-%d')
