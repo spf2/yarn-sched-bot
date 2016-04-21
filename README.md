@@ -11,10 +11,10 @@ You should get a message like:
 
 ```@sched: What days work for you? <link>```
 
-
-
 Just click on the link, pick from the available days (gray dates are unavailable), and hit 'Submit'.
 When everyone has responded, the @sched bot will announce which day is best.
+
+![Calendar](https://cdn-images-1.medium.com/max/1200/1*uyWed-ObRNiyGjehMkz7Zg.png)
 
 # How to create a poll
 
