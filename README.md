@@ -55,3 +55,5 @@ This is just a demo at this point. It needs a lot more features like:
 - TODO: Offer other canned options (like "@sched weekend"), as well as specify date options (like doodle)
 - TODO: Time
 - TODO: Recurring polls
+
+Pull requests welcome, of course!
