@@ -170,10 +170,10 @@ def poll_users(thread, sender):
     return Form(
         action="meeting",
         thread_id=thread.thread_id,
-        label=thread.topic,
+        label=u"What days work for you?",
         items=[FormItem(select=FormSelect(
             type=FormSelect.DATE,
-            label=u"What days work for you?",
+            label=thread.topic,
             multiple=True,
             options=date_options()))])
 
