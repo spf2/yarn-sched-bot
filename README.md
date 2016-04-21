@@ -43,7 +43,15 @@ Once people have all joined, you can ask sched to find a weekday with
 
 The sched bot will send a link to everyone asking them to pick available days.
 
+You can check on the status of your poll just by mentioning @sched, and it will reply like:
+
+> 3/6 have responded. Tomorrow is best so far. Alice, Bob and Chuck are free. Type @sched done or nevermind to announce result or stop poll [respectively]
+
+# What's next
+
+This is just a demo at this point. It needs a lot more features like:
 
 - TODO: Poll new participants as they are added or join
 - TODO: Offer other canned options (like "@sched weekend"), as well as specify date options (like doodle)
 - TODO: Time
+- TODO: Recurring polls
